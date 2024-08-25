@@ -1,6 +1,7 @@
 class HouseController {
   async store(req, res) {
-    return res.json({ message: "store" })
+    console.log(req.file)
+    return res.json({ ok: true })
   }
 }
 
