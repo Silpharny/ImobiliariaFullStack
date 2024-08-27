@@ -1,3 +1,4 @@
+import * as Yup from "yup"
 import House from "../models/House.js"
 import User from "../models/User.js"
 
@@ -11,9 +12,20 @@ class HouseController {
   }
 
   async store(req, res) {
+    const schema = Yup.object().shape({
+      description: Yup.string().required(),
+      price: Yup.number().required(),
+      location: Yup.string().required(),
+      status: Yup.boolean().required(),
+    })
+
     const { filename } = req.file
     const { description, price, location, status } = req.body
     const { user_id } = req.headers
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: "Validation fails" })
+    }
 
     const house = await House.create({
       user: user_id,
